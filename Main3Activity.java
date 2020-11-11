@@ -6,7 +6,10 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import android.annotation.SuppressLint;
 import android.content.res.XmlResourceParser;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
@@ -36,21 +39,18 @@ public class Main3Activity extends AppCompatActivity {
     StickerView stickerView;
 
     Vector alienVector;
-    PhotoView photoView;
     RichPath stickerPart;
     XmlResourceParser xrp;
 
+    Drawable stickerDrawable;
     RichPathDrawable alienRichPathDrawable;
-    ImageView.ScaleType alienScaleType = ImageView.ScaleType.CENTER;
+    ImageView.ScaleType alienScaleType = ImageView.ScaleType.FIT_XY;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-
-        photoView = findViewById(R.id.qwe);
-
 
         stickerView = (StickerView) findViewById(R.id.sticker_view);
 
@@ -101,13 +101,16 @@ public class Main3Activity extends AppCompatActivity {
 
 
         stickerPart = alienRichPathDrawable.findRichPathByName("path_5");
+        assert stickerPart != null;
         stickerPart.setFillColor(Color.BLUE);
 
+        alienRichPathDrawable.invalidateSelf();
+        stickerDrawable =  new DrawableSticker(alienRichPathDrawable).getDrawable();
 
-        stickerView.addSticker(alienRichPathDrawable);
+        stickerView.addSticker(new DrawableSticker(stickerDrawable));
 
 
-        Drawable drawable =
-                ContextCompat.getDrawable(this, R.drawable.ic_aliens_12);
-    }
+/*        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_aliens_12);
+        stickerView.addSticker(new DrawableSticker(drawable));
+  */  }
 }
