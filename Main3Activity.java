@@ -104,7 +104,7 @@ public class Main3Activity extends AppCompatActivity {
         stickerPart.setFillColor(Color.BLUE);
 
 
-        photoView.setImageDrawable(alienRichPathDrawable);
+        stickerView.addSticker(alienRichPathDrawable);
 
 
         Drawable drawable =
