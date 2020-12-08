@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<Phonebook>
+    <PhonebookEntry>
+        <firstname>Michael</firstname> 
+        <lastname>De Leon</lastname> 
+        <Address>5, Cat Street</Address> 
+    </PhonebookEntry>
+    <PhonebookEntry>
+        <firstname>John</firstname> 
+        <lastname>Smith</lastname> 
+        <Address>6, Dog Street</Address> 
+    </PhonebookEntry>
+</Phonebook>
