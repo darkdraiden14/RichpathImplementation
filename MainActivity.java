@@ -3,6 +3,7 @@ package com.example.lasttry;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +19,13 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,7 +49,13 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void enterInHeaven(View view) {
         try {
-            InputStream is = getAssets().open("pathways.xml");
+            String urlString = "https://panoslice-prod.s3.ap-southeast-1.amazonaws.com/stickers/boho/000.xml";
+            //InputStream is = getAssets().open("pathways.xml");
+
+            InputStream is = null;
+            CreateInput ct = new CreateInput();
+            is = ct.execute(urlString).get();
+
             xmlFactoryObject = XmlPullParserFactory.newInstance();
             myParser = xmlFactoryObject.newPullParser();
 
@@ -81,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 event = myParser.next();
             }
 
-        } catch (XmlPullParserException | IOException e) {
+        } catch (XmlPullParserException | IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
