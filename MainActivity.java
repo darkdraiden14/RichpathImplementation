@@ -1,86 +1,88 @@
-package com.example.stickereditor;
+package com.example.lasttry;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.richpath.RichPath;
-import com.richpath.RichPathView;
-import com.richpathanimator.RichPathAnimator;
-
-import android.graphics.Color;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RichPathView alienRichPathView;
-    private boolean reverse = false;
+    private TextView tv;
+    private XmlPullParserFactory xmlFactoryObject;
+    private XmlPullParser myParser;
 
-
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tv = findViewById(R.id.hell);
 
-        alienRichPathView = findViewById(R.id.ic_alien);
-
-        Button blue,red,yellow,gray,green,orange;
-        blue = findViewById(R.id.bluebtn);
-        yellow = findViewById(R.id.yellowbtn);
-        red = findViewById(R.id.redbtn);
-        green = findViewById(R.id.greenbtn);
-        gray = findViewById(R.id.graybtn);
-        orange = findViewById(R.id.orangebtn);
-
-        final RichPath part1 = alienRichPathView.findRichPathByName("path_1");
-        final RichPath part2 = alienRichPathView.findRichPathByName("path_2");
-        final RichPath part3 = alienRichPathView.findRichPathByName("path_3");
-        final RichPath part4 = alienRichPathView.findRichPathByName("path_4");
-        final RichPath part5 = alienRichPathView.findRichPathByName("path_5");
-        final RichPath part6 = alienRichPathView.findRichPathByName("path_6");
-        final RichPath part7 = alienRichPathView.findRichPathByName("path_7");
-
-        yellow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                part1.setFillColor(R.color.yellow);
-            }
-        });
-        red.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                part1.setFillColor(R.color.red);
-                // Code here executes on main thread after user presses button
-            }
-        });
-        blue.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                part1.setFillColor(R.color.blue);
-                // Code here executes on main thread after user presses button
-            }
-        });
-        green.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                part1.setFillColor(R.color.green);
-                // Code here executes on main thread after user presses button
-            }
-        });
-        gray.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                part1.setFillColor(R.color.gray);
-                // Code here executes on main thread after user presses button
-            }
-        });
-        orange.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                part1.setFillColor(R.color.orange);
-                // Code here executes on main thread after user presses button
-            }
-        });
     }
 
-    private void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    @SuppressLint("SetTextI18n")
+    public void enterInHeaven(View view) {
+        try {
+            InputStream is = getAssets().open("pathways.xml");
+            xmlFactoryObject = XmlPullParserFactory.newInstance();
+            myParser = xmlFactoryObject.newPullParser();
+
+            myParser.setInput(is, null);
+
+            int event = myParser.getEventType();
+            while (event != XmlPullParser.END_DOCUMENT)  {
+                String name=myParser.getName();
+                switch (event){
+                    case XmlPullParser.START_TAG:
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        if(name.equals("path")){
+                            tv.setText(tv.getText() + myParser.getAttributeValue(null,"name"));
+                            if(myParser.getAttributeValue(null,"pathData")!=null) {
+                                tv.setText(tv.getText() + "\n " + myParser.getAttributeValue(null, "pathData"));
+                            }if(myParser.getAttributeValue(null,"fillColor")!=null) {
+                                tv.setText(tv.getText() + " \n " + myParser.getAttributeValue(null, "fillColor"));
+                            }if(myParser.getAttributeValue(null,"strokeWidth")!=null) {
+                                tv.setText(tv.getText() + " \n " + myParser.getAttributeValue(null, "strokeWidth"));
+                            }if(myParser.getAttributeValue(null,"strokeColor")!=null) {
+                                tv.setText(tv.getText() + " \n" + myParser.getAttributeValue(null, "strokeColor"));
+                            }if(myParser.getAttributeValue(null,"strokeLineJoin")!=null) {
+                                tv.setText(tv.getText() + " \n" + myParser.getAttributeValue(null, "strokeLineJoin"));
+                            }if(myParser.getAttributeValue(null,"strokeLineCap")!=null) {
+                                tv.setText(tv.getText() + " \n" + myParser.getAttributeValue(null, "strokeLineCap"));
+                            }if(myParser.getAttributeValue(null,"fillAlpha")!=null) {
+                                tv.setText(tv.getText() + " \n" + myParser.getAttributeValue(null, "fillAlpha"));
+                            }if(myParser.getAttributeValue(null,"strokeAlpha")!=null) {
+                                tv.setText(tv.getText() + " \n" + myParser.getAttributeValue(null, "strokeAlpha"));
+                            }
+                            tv.setText(tv.getText() + "\n" + "-------------------------------");
+                        }
+                        break;
+                }
+                event = myParser.next();
+            }
+
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
